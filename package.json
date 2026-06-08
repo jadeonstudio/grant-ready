@@ -1,0 +1,26 @@
+{
+  "name": "oss-form-readiness",
+  "version": "0.1.0",
+  "description": "A tiny CLI that helps OSS maintainers prepare support-program application drafts from GitHub repo signals.",
+  "type": "module",
+  "bin": {
+    "oss-form-readiness": "./bin/oss-form-readiness.js"
+  },
+  "scripts": {
+    "start": "node ./bin/oss-form-readiness.js",
+    "check": "node ./bin/oss-form-readiness.js openai/codex --no-network"
+  },
+  "keywords": [
+    "oss",
+    "open-source",
+    "maintainer",
+    "grant",
+    "github",
+    "codex"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}

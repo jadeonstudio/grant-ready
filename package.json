@@ -1,11 +1,16 @@
 {
   "name": "oss-form-readiness",
   "version": "0.1.0",
-  "description": "A tiny CLI that helps OSS maintainers prepare support-program application drafts from GitHub repo signals.",
+  "description": "Check whether an open-source repo is ready for support-program forms, grants, and API credit applications.",
   "type": "module",
   "bin": {
     "oss-form-readiness": "./bin/oss-form-readiness.js"
   },
+  "files": [
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "start": "node ./bin/oss-form-readiness.js",
     "check": "node ./bin/oss-form-readiness.js openai/codex --no-network"
@@ -14,11 +19,22 @@
     "oss",
     "open-source",
     "maintainer",
+    "readiness",
+    "application",
     "grant",
+    "credits",
     "github",
     "codex"
   ],
-  "author": "",
+  "homepage": "https://github.com/jadeonstudio/grant-ready#readme",
+  "bugs": {
+    "url": "https://github.com/jadeonstudio/grant-ready/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jadeonstudio/grant-ready.git"
+  },
+  "author": "Jang Jiyong",
   "license": "MIT",
   "engines": {
     "node": ">=18"

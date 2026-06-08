@@ -1,13 +1,8 @@
 # oss-form-readiness
 
-A tiny CLI that helps open-source maintainers prepare support-program application drafts from public GitHub repository signals.
+Check whether an open-source repository is ready for support-program forms, grants, and API credit applications.
 
-It is built for forms that ask questions like:
-
-- Why is this repository important?
-- What maintainer role do you have?
-- How would API credits help the project?
-- What public signals show active maintenance or ecosystem impact?
+`oss-form-readiness` reads public GitHub signals and turns them into a practical readiness report: score, checklist, repo summary, next steps, and draft application copy you can edit instead of starting from a blank form.
 
 ## Quick start
 
@@ -15,46 +10,60 @@ It is built for forms that ask questions like:
 npx oss-form-readiness owner/repo
 ```
 
-You can also run it from a GitHub URL:
+Examples:
 
 ```bash
-npx oss-form-readiness https://github.com/owner/repo
+npx oss-form-readiness openai/codex
+npx oss-form-readiness https://github.com/openai/codex
 ```
 
-## Example
+## Markdown for application notes
+
+Generate Markdown that can be pasted into `APPLICATION.md`, grant notes, or an internal review doc:
 
 ```bash
-oss-form-readiness openai/codex
+npx oss-form-readiness owner/repo --markdown > APPLICATION.md
 ```
 
-Output includes:
+The Markdown output includes:
 
-- repository summary
-- readiness score
-- application checklist
-- draft answer for "why this repository fits"
-- draft answer for "how API credits will be used"
+- repository signals
+- readiness checklist
+- draft answer for why the repository fits
+- draft API credit usage plan
+- extra context paragraph
 - concrete next steps before applying
 
-## Local usage
+## JSON output
+
+Use `--json` when you want to script around the result:
 
 ```bash
-git clone https://github.com/YOUR_NAME/oss-form-readiness.git
-cd oss-form-readiness
-npm start -- owner/repo
+npx oss-form-readiness owner/repo --json
 ```
 
-For screenshots or offline demos:
+## Offline demo mode
+
+Use demo data for screenshots, local checks, or examples without calling GitHub:
 
 ```bash
-npm start -- owner/repo --no-network
+npx oss-form-readiness owner/repo --no-network
+npx oss-form-readiness owner/repo --no-network --markdown
 ```
 
-JSON output:
+## What it checks
 
-```bash
-npm start -- owner/repo --json
-```
+The report currently looks at:
+
+- public repository URL
+- recent maintenance activity
+- recent commits
+- contributor count
+- public releases
+- visible ecosystem signals such as stars, forks, and contributors
+- clear GitHub repository description
+
+This is intentionally simple. It is not a judging system or a guarantee that any application will be accepted. It is a fast preflight checklist for maintainers who want their public evidence and application draft to be in better shape.
 
 ## GitHub rate limits
 
@@ -62,22 +71,38 @@ The CLI uses public GitHub API endpoints. For higher rate limits, set a token:
 
 ```bash
 export GITHUB_TOKEN=github_pat_xxx
-oss-form-readiness owner/repo
+npx oss-form-readiness owner/repo
 ```
 
 The token is only sent to `api.github.com`.
 
+## Local development
+
+```bash
+git clone https://github.com/jadeonstudio/grant-ready.git
+cd grant-ready
+npm run check
+node ./bin/oss-form-readiness.js owner/repo
+```
+
+Useful local commands:
+
+```bash
+node ./bin/oss-form-readiness.js owner/repo --markdown
+node ./bin/oss-form-readiness.js owner/repo --json
+node ./bin/oss-form-readiness.js owner/repo --no-network
+```
+
 ## Why this exists
 
-Maintainers often need to explain project impact, maintenance activity, release workflow, and credit usage plans in a very small text box. This tool turns public repo signals into a quick first draft so maintainers can spend more time improving the project and less time starting from a blank form.
+Maintainers often need to explain project impact, maintenance activity, release workflow, and credit usage plans in a very small text box. This tool turns public repo signals into a quick first draft so maintainers can spend more time improving the project and less time starting from scratch.
 
 ## Roadmap
 
-- Better README quality checks
+- README and release-readiness checks
 - GitHub Sponsors and grant-form templates
 - Maintainer role prompts
-- Markdown export
-- Optional OpenAI-powered rewrite mode
+- Optional AI-assisted rewrite mode
 
 ## License
 

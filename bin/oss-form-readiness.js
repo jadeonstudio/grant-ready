@@ -10,6 +10,7 @@ Usage:
 
 Options:
   --json        Print JSON instead of a text report
+  --markdown    Print Markdown for APPLICATION.md or grant notes
   --no-network  Use demo data, useful for screenshots and tests
   -h, --help    Show this help
 `;
@@ -17,6 +18,7 @@ Options:
 const args = process.argv.slice(2);
 const wantsHelp = args.includes("-h") || args.includes("--help");
 const asJson = args.includes("--json");
+const asMarkdown = args.includes("--markdown");
 const noNetwork = args.includes("--no-network");
 const target = args.find((arg) => !arg.startsWith("-"));
 
@@ -34,9 +36,15 @@ if (!repoId) {
 try {
   const data = noNetwork ? demoData(repoId) : await fetchRepoData(repoId);
   const report = buildReport(data);
-  console.log(asJson ? JSON.stringify(report, null, 2) : formatReport(report));
+  console.log(formatOutput(report, { asJson, asMarkdown }));
 } catch (error) {
   fail(error.message);
+}
+
+function formatOutput(report, { asJson, asMarkdown }) {
+  if (asJson) return JSON.stringify(report, null, 2);
+  if (asMarkdown) return formatMarkdown(report);
+  return formatReport(report);
 }
 
 function parseRepo(input) {
@@ -233,6 +241,53 @@ function formatReport(report) {
   lines.push(wrap(report.drafts.extra));
   lines.push("");
   lines.push("Next steps");
+  report.nextSteps.forEach((step) => lines.push(`- ${step}`));
+
+  return lines.join("\n");
+}
+
+function formatMarkdown(report) {
+  const lines = [];
+
+  lines.push(`# OSS support application notes: ${report.repo}`);
+  lines.push("");
+  lines.push(`Repository: ${report.url}`);
+  lines.push(`Readiness score: ${report.score}/100`);
+  lines.push("");
+  lines.push("## Repository signals");
+  lines.push("");
+  lines.push(`- Description: ${report.summary.description}`);
+  lines.push(`- Language: ${report.summary.language}`);
+  lines.push(`- Stars: ${report.summary.stars}`);
+  lines.push(`- Forks: ${report.summary.forks}`);
+  lines.push(`- Open issues: ${report.summary.openIssues}`);
+  lines.push(`- Recent commits in the last 30 days: ${report.summary.recentCommits30d}`);
+  lines.push(`- Last pushed: ${formatDays(report.summary.lastPushedDaysAgo)}`);
+  lines.push(`- Latest release: ${report.summary.latestRelease || "none"}`);
+  if (report.summary.topics.length > 0) {
+    lines.push(`- Topics: ${report.summary.topics.join(", ")}`);
+  }
+  lines.push("");
+  lines.push("## Checklist");
+  lines.push("");
+  report.checks.forEach((item) => {
+    lines.push(`- ${item.passed ? "[x]" : "[ ]"} ${item.label}`);
+  });
+  lines.push("");
+  lines.push("## Why this repository fits");
+  lines.push("");
+  lines.push(report.drafts.fit);
+  lines.push("");
+  lines.push("## API credit plan");
+  lines.push("");
+  lines.push(report.drafts.apiCredits);
+  lines.push("");
+  lines.push("## Extra context");
+  lines.push("");
+  lines.push(report.drafts.extra);
+  lines.push("");
+  lines.push("## Before applying");
+  lines.push("");
   report.nextSteps.forEach((step) => lines.push(`- ${step}`));
 
   return lines.join("\n");

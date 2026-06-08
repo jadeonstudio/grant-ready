@@ -4,7 +4,7 @@
   "description": "Check whether an open-source repo is ready for support-program forms, grants, and API credit applications.",
   "type": "module",
   "bin": {
-    "oss-form-readiness": "./bin/oss-form-readiness.js"
+    "oss-form-readiness": "bin/oss-form-readiness.js"
   },
   "files": [
     "bin",
